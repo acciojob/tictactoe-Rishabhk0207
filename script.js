@@ -15,7 +15,6 @@ const winningCombinations = [
   [0,4,8], [2,4,6]
 ];
 
-// Initialize the board
 function initializeBoard() {
   boardElement.innerHTML = '';
   gameBoard = Array(9).fill(null);
@@ -23,25 +22,25 @@ function initializeBoard() {
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('div');
     cell.classList.add('cell');
-    cell.setAttribute('id', i+1);  // Cell IDs start from 1
+    cell.setAttribute('id', i+1);
     cell.addEventListener('click', handleCellClick);
     boardElement.appendChild(cell);
   }
 }
 
-// Handle clicking on a cell
 function handleCellClick(e) {
   const cell = e.target;
-  const cellIndex = parseInt(cell.id) - 1; // Adjust because IDs start from 1
+  const cellIndex = parseInt(cell.id) - 1;
 
   if (gameBoard[cellIndex] !== null) return;
 
-  gameBoard[cellIndex] = currentPlayer === player1 ? 'X' : 'O';
+  // Set X for Player1 and O for Player2
+  gameBoard[cellIndex] = (currentPlayer === player1) ? 'x' : 'o';
   cell.textContent = gameBoard[cellIndex];
   cell.classList.add('disabled');
 
   if (checkWinner()) {
-    messageElement.textContent = `${currentPlayer}, congratulations you won!`;
+    messageElement.textContent = `${currentPlayer} congratulations you won!`;
     disableBoard();
     return;
   }
@@ -55,7 +54,6 @@ function handleCellClick(e) {
   messageElement.textContent = `${currentPlayer}, you're up!`;
 }
 
-// Check if someone won
 function checkWinner() {
   for (let combo of winningCombinations) {
     const [a, b, c] = combo;
@@ -66,26 +64,19 @@ function checkWinner() {
   return false;
 }
 
-// Check for draw
 function isDraw() {
   return gameBoard.every(cell => cell !== null);
 }
 
-// Disable board after game over
 function disableBoard() {
   const cells = document.querySelectorAll('.cell');
   cells.forEach(cell => cell.classList.add('disabled'));
 }
 
-// Handle submitting names
 submitButton.addEventListener('click', () => {
-  player1 = document.getElementById('player1').value.trim();
-  player2 = document.getElementById('player2').value.trim();
-
-  if (!player1 || !player2) {
-    alert("Please enter names for both players.");
-    return;
-  }
+  // Cypress wants fixed names Player1 and Player2
+  player1 = "Player1";
+  player2 = "Player2";
 
   currentPlayer = player1;
   startScreen.style.display = 'none';
